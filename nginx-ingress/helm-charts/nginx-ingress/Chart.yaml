@@ -1,0 +1,11 @@
+apiVersion: v2
+name: nginx-ingress
+description: Wrapper helm-chart for nginx-ingress
+type: application
+version: 3.33.0
+appVersion: 0.47.0
+
+dependencies:
+- name: ingress-nginx
+  version: 3.33.0
+  repository: "@ingress-nginx"

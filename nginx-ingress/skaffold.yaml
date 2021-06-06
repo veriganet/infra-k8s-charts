@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+profiles:
+  - name: stg
+    deploy:
+      helm:
+        releases:
+          - name: nginx-ingress
+            chartPath: ./helm-charts/nginx-ingress
+            namespace: ingress
+            setValues:
+              nginx-ingress.controller.replicaCount: 1
+  - name: prod
+    deploy:
+      helm:
+        releases:
+          - name: nginx-ingress
+            chartPath: ./helm-charts/nginx-ingress
+            namespace: ingress

@@ -1,0 +1,30 @@
+ingress-nginx:
+  controller:
+    name: controller
+    replicaCount: 3
+    resources:
+      limits:
+        cpu: "100m"
+        memory: "128Mi"
+      requests:
+        cpu: "70m"
+        memory: "128Mi"
+    metrics:
+      enabled: true
+    service:
+      targetPorts:
+        http: 80
+        https: 443
+      type: NodePort
+      nodePorts:
+        http: 32080
+        https: 32443
+    stats:
+      enabled: true
+  defaultBackend:
+    enabled: true
+    name: default-backend
+    service:
+      type: NodePort
+  rbac:
+    create: true
