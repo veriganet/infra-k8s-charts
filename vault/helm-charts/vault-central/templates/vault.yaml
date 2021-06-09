@@ -1,0 +1,175 @@
+# Create a namespace for called "tenant" for the Tenant Vault instance,
+# the Central instance will be running in .Release.Namespace = "vault-central"
+
+# This Vault CR describes the setup of the Central Vault instance
+apiVersion: "vault.banzaicloud.com/v1alpha1"
+kind: "Vault"
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  size: 1
+  image: vault:1.5.5
+  bankVaultsImage: banzaicloud/bank-vaults:latest
+
+  # Specify the ServiceAccount where the Vault Pod and the Bank-Vaults
+  # configurer/unsealer will be running
+  serviceAccount: {{ .Chart.Name }}
+
+  # Specify how many nodes you would like to have in your etcd cluster
+  # NOTE: -1 disables automatic etcd provisioning
+  etcdSize: -1
+
+  resources:
+    # A YAML representation of resource ResourceRequirements for vault container
+    # Detail can reference: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container
+    vault:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "150m"
+
+  volumeMounts:
+    - name: tls
+      mountPath: /tls
+    - name: {{ .Chart.Name }}-file
+      mountPath: /vault/file
+
+  volumes:
+    - name: tls
+      secret:
+        secretName: {{ .Chart.Name }}-tls
+    - name: {{ .Chart.Name }}-file
+      persistentVolumeClaim:
+        claimName: {{ .Chart.Name }}-file
+
+  # Unsealing will be done via Kubernetes Secrets if not defined otherwise,
+  # not highly secure, but this is just an example, in production, please
+  # use one of the KMS based unseal options.
+  unsealConfig:
+    kubernetes:
+      secretNamespace: {{ .Release.Namespace }}
+
+  # A YAML representation of a final Vault config file, this will be mounted
+  # to the Vault container directly.
+  config:
+    storage:
+      file:
+        path: /vault/file
+    listener:
+      tcp:
+        address: "0.0.0.0:8200"
+        tls_cert_file: /tls/server.crt
+        tls_key_file: /tls/server.key
+    api_addr: https://vault-central.vault-central:8200
+    ui: true
+
+  # This is how the Bank-Vaults configurer should configure Vault to enable the
+  # transit auto-unseal flow for the tenant instance.
+  # The automated version of:
+  # https://learn.hashicorp.com/vault/operations/autounseal-transit#cli-command
+  externalConfig:
+
+    # Configure the transit secret engine and create a key for the auto-unseal
+    secrets:
+      - type: "transit"
+        path: "vault/transit/"
+        description: Transit engine for the tenant
+        configuration:
+          keys:
+            - name: autounseal
+              type: aes256-gcm96
+              exportable: false
+
+      - path: secret
+        type: kv
+        description: General secrets.
+        options:
+          version: 2
+
+    # The tenant Vault needs to call the transit secret engine endpoints,
+    # create the necessary policies to permit it
+    policies:
+      - name: admin
+        rules: path "auth/*" {
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/auth/*" {
+          capabilities = ["create", "update", "delete", "sudo"]
+          }
+          path "sys/auth" {
+          capabilities = ["read"]
+          }
+          path "sys/policies/acl/*" {
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/policies/acl" {
+          capabilities = ["list"]
+          }
+          path "secret/*" {
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/mounts/*" {
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/health" {
+          capabilities = ["read", "sudo"]
+          }
+          path "sys/capabilities" {
+          capabilities = ["create", "update"]
+          }
+          path "sys/capabilities-self" {
+          capabilities = ["create", "update"]
+          }
+      - name: allow_tenant_transit
+        rules: path "vault/transit/encrypt/autounseal" {
+          capabilities = ["update"]
+          }
+          path "vault/transit/decrypt/autounseal" {
+          capabilities = ["update"]
+          }
+
+      - name: allow_read_secrets
+        rules: path "secret/*" {
+          capabilities = ["read", "list"]
+          }
+
+    # Instead of creating a token by hand we allow the tenant Vault to request
+    # one with the Kubernetes auth method, via vault-env and vault-secrets-webhook
+    auth:
+      - type: kubernetes
+        path: kubernetes/
+        roles:
+          # Allow every the tenant Vault Pod in the tenant namespace to use
+          # this transit engine
+          - name: default
+            bound_service_account_names: "default"
+            bound_service_account_namespaces: "*"
+            policies: "allow_read_secrets"
+            ttl: 3m
+          - name: vault
+            bound_service_account_names: "default,vault"
+            bound_service_account_namespaces: "vault"
+            policies: "allow_tenant_transit,allow_read_secrets"
+            ttl: 3m
+          - name: etcd
+            bound_service_account_names: "default,etcd"
+            bound_service_account_namespaces: "etcd"
+            policies: allow_read_secrets
+            ttl: 3m
+      - type: userpass
+        path: userpass/
+
+  # Instruct the vault-operator to distribute the CA certificate of the central
+  # Vault instance into other namespaces as well, this way a secure TLS connection
+  # can be built up between the tenant and central Vault instances
+  #caNamespaces:
+  #  - "vault"
+  #  - "vswh"
+  #  - "vault-central"
+
+  vaultEnvsConfig:
+    - name: VAULT_CACERT
+      value: "/tls/ca.crt"

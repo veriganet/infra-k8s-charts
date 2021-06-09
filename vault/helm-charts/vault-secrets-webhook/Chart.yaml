@@ -1,0 +1,16 @@
+apiVersion: v2
+name: vault-secrets-webhook
+version: 1.7.2
+appVersion: 1.7.0
+description: A Helm chart that deploys a mutating admission webhook that configures applications to request env vars from Vault Secrets
+home: https://banzaicloud.com/products/bank-vaults/
+sources:
+  - https://github.com/banzaicloud/bank-vaults
+maintainers:
+  - name: Banzai Cloud
+    email: info@banzaicloud.com
+
+dependencies:
+  - name: vault-secrets-webhook
+    version: 1.7.2
+    repository: "@banzaicloud-stable"

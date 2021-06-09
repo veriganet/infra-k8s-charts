@@ -1,0 +1,6 @@
+dependencies:
+- name: vault-secrets-webhook
+  repository: https://kubernetes-charts.banzaicloud.com
+  version: 1.7.2
+digest: sha256:7de66f0548e48ca067c8fe7954d76486cdd0475ba4dc94e3957a2cbd2f0f05e2
+generated: "2020-11-03T17:19:20.333836104+01:00"

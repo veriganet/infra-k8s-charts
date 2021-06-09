@@ -1,0 +1,61 @@
+postgresql-ha:
+  postgresql:
+    replicaCount: 2
+
+    username: ""
+    #password: "vault:secret/data/postgresql#postgres_password"
+    password: ""
+    repmgrUsername: ""
+    #repmgrPassword: "vault:secret/data/postgresql#repmgr_password"
+    repmgrPassword: ""
+    repmgrDatabase: "repmgrdatabase"
+
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "512Mi"
+      limits:
+        cpu: "200m"
+        memory: "512Mi"
+
+    podLabels:
+      storageos.com/locality: strict
+    labels:
+      storageos.com/locality: strict
+
+    livenessProbe:
+      enabled: true
+    readinessProbe:
+      enabled: true
+
+  pgpool:
+    replicaCount: 2
+    adminUsername:
+    #adminPassword: "vault:secret/data/postgresql#pg_admin_password"
+    adminPassword:
+
+    customUsers:
+      usernames:
+      passwords:
+
+    resources:
+      requests:
+        cpu: "70m"
+        memory: "400Mi"
+      limits:
+        cpu: "150m"
+        memory: "400Mi"
+    livenessProbe:
+      enabled: true
+    readinessProbe:
+      enabled: true
+
+  persistence:
+    enabled: true
+    storageClass: "fast"
+    size: 5Gi
+
+  volumePermissions:
+    enabled: true
+    securityContext:
+      runAsUser: 0

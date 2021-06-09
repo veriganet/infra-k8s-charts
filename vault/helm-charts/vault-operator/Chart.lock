@@ -1,0 +1,6 @@
+dependencies:
+- name: vault-operator
+  repository: https://kubernetes-charts.banzaicloud.com
+  version: 1.13.0
+digest: sha256:212b6866e451dfdf5a62e7618f5caf4071c2b3daede3ec55b269845c6abec398
+generated: "2021-06-07T17:35:14.527191596-04:00"

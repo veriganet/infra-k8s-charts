@@ -1,0 +1,57 @@
+apiVersion: ENC[AES256_GCM,data:95ZlLRaQKmYqO4tUEWWN7w==,iv:FxFo2wuRE9DNaGCuGL0MHtb2HR9B7yAfsi5WEvgEJWw=,tag:QjuLc9H9bO19sWtKCStr/g==,type:str]
+kind: ENC[AES256_GCM,data:Sm8kiso3,iv:ovLgcxOC9FKAdqpD7QJfi1jA8HBkd0KYSwLYV/lofek=,tag:WIaYWt2pty0RO2TsODj1Zg==,type:str]
+profiles:
+-   name: ENC[AES256_GCM,data:q/sP,iv:1AD54dTGrZYKobP6CyG7eTdHi1T17nVZPZSU+/SLJNE=,tag:UisIjAx8SkoF5mYYaqrr2g==,type:str]
+    deploy:
+        kubectl:
+            manifests:
+            - ENC[AES256_GCM,data:fDn85SL5gZeaEA==,iv:pnBUeTFShrCr3jKIC8SZNvVzdOpuK0j9o9xNGOowgso=,tag:qQwS1tXY9SB8Z6UAGAXFVg==,type:str]
+-   name: ENC[AES256_GCM,data:3zWl,iv:dvgltV3vK+/iaKfejfy8ybgd9b0P/gzVOf/vz0FBgm4=,tag:hBnhASHY9UtlFR6f8GOdDg==,type:str]
+    deploy:
+        helm:
+            releases:
+            -   name: ENC[AES256_GCM,data:FE1OTqgvIQ==,iv:FHTMwpggu1PsOL8/pXPWbh3mJYuO4C0y7KQ8LuTl0+o=,tag:V+uQzFMqoVwYsAeF+yTa6w==,type:str]
+                chartPath: ENC[AES256_GCM,data:nWbc0n46lzvlMGtDIDVd28L7PGWY,iv:IRWnNKleIMojDayXuhAbVLDQDMglJxHxhI+rc1JI7+g=,tag:m2GqUJ0AtsgwPayi+QI7Ww==,type:str]
+                namespace: ENC[AES256_GCM,data:JSOdaDa5fQ==,iv:4qovYt7YG/3FB2dEVlnbpIvZOA8tsgYNDmouAPbxiJE=,tag:B8Vb/hJG+fRl567bQNJPlA==,type:str]
+                setValues:
+                    mongodb.auth.rootPassword: ENC[AES256_GCM,data:TkRcCtyMl3RFtNNwb52SLzexmgcpaqTT,iv:fUsGICPqGPGkPuUizqYL06gV1TlZoRA6TqSenoYZs/g=,tag:LaK5AQnfREXdbkLXKdNDXg==,type:str]
+                    mongodb.auth.replicaSetKey: ENC[AES256_GCM,data:gP31kzOjCPrFFNrkovURRBNPEOwc1UkT,iv:83ALpa9vcfvTyzSH9jbeMIjC4kw5GaNCXDM7EH0yJMA=,tag:HP6ejFO/RaAybXdH65vcdA==,type:str]
+                    mongodb.replicaCount: ENC[AES256_GCM,data:4w==,iv:lOhbjB2rGDGkIaJud0GFsFFviCTsJy+EP+HX8a4ARa8=,tag:mEAnZxE1pgZYq/dogUEMnw==,type:int]
+-   name: ENC[AES256_GCM,data:Y79kyw==,iv:RnkgHGfSvjfjIEZEtaQWZd9wbVBWB5r+lYEqX1KnQpY=,tag:KuZ6qh9V/1RioO5P7mOv1w==,type:str]
+    deploy:
+        helm:
+            releases:
+            -   name: ENC[AES256_GCM,data:lvYnWAGHSg==,iv:ZBsq32UgUT+8UyLHNLlHRW80svd4U4HqjxQ8NrpzfVk=,tag:BvKWru9nID5nijQLzCKkdA==,type:str]
+                chartPath: ENC[AES256_GCM,data:9bqyEIumSTU7hnnBt4gk6bBf8ecv,iv:8TLJVWMhcnJCvo/RZHout2AWzl9PWrk/RVQX15gfgpk=,tag:cuTdIeYbrsU711KxdSWfUA==,type:str]
+                namespace: ENC[AES256_GCM,data:DDm15owv+Q==,iv:5sOQoQgCJHGSINeHmYbhJd6Gt2ty0G6lre/jU2Ti0l8=,tag:9r/p+ZM7mxpq/jtWz9l2IA==,type:str]
+                setValues:
+                    mongodb.auth.rootPassword: ENC[AES256_GCM,data:l8yYdLMfcMcRag6DMPtjagPfkGEY5/k+,iv:ubnp6GRBOyBUhE1Qk5yMUybTUT1Zxj+mKuy7d1+BgWY=,tag:bktCjFBeW8g9ZnkynK/fQA==,type:str]
+                    mongodb.auth.replicaSetKey: ENC[AES256_GCM,data:udRz66VkIf3a7PbK5HJ5U5tPtivK1CgA,iv:FC4hxOrjKmDimnk0+KcmVP6NS8kCT7lkOOajMyPVank=,tag:nrIrmHDTJjnEZfXBMnWerQ==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    lastmodified: '2021-06-09T13:05:57Z'
+    mac: ENC[AES256_GCM,data:1jpiqs2FYa+YkO3Ku72apoITATKUxuf/2Jv6OuyNZZorYgCh/mdQblLy+r7OlaXDjl+M9MSd2H2J7G/nQ9OgSewacINuA/sZuTXie0T4hnQkphfiIvd8qfgH7cIP5u4Mna2AW5zefEBg+/MbO6lYSVgsnQPxSIIdWGcKEo3tJUQ=,iv:cGzIBE5r2PrcZWNqnYq2lUYLYB2Bxidvw6FTiOy7XaA=,tag:W2+izR7AMj1Yq7fZ32BdOQ==,type:str]
+    pgp:
+    -   created_at: '2021-06-09T13:05:56Z'
+        enc: |
+            -----BEGIN PGP MESSAGE-----
+
+            hQGMA7lPC4r8+hzxAQwAmiNLEhittN6YPgsGlloTHlS9+UwB7SAOPUJHA9mSS/k+
+            5ytUOu6WoOaHLk4wxpCGI4+2kA41h/EccCP7JOqGZ+mJi2/QeBul+4U7bX8QjotZ
+            im4xirkxEmohu0pUoqHXkAKU31E/khrn1Fjhej7w9xetKRPDgGw1Gk0eskDcDINE
+            dCzbgHPC42q15sGU7HoO6AYnyRAZg63MXdZxx3ay6D9XVzaAvWlcOFnuOnR8RlUF
+            gzBqnUk31traMHbqYNZT3yjD0sGTBeaN5S6oWiZuTa5Avl+a7wwxCBW8Lz8GhstG
+            e6Pu9OsyiEcRyfXbmtKGNXbVZKs0TNm7KuQyM0SB/QLAYWLSjMdtWgAlgg7guiaa
+            N4DagrlciDtlKpYYdvGrnODKlqSiHWOYvVaBM1FO/KYN3f2WHYdaxOLuJOWbU81b
+            EL9e8hkOYpOJ+DU8ZK04q/XtD8otsXEIVOIXxpyOBzWNOUo8AbV1qR2Vi58Pyg4T
+            DFhbXibGprpI1EwpHUc/0l4BYC3g7M0WWV4nDSGeXWSqLoWGGubkb9otPzSivVep
+            3VJfuzDiaziPrF6tUt0AcH12rUCh/yzqe/9JGjQFivaakyFad7QwrRq99LND4jie
+            pCufun9Sj7+2y3CUuQGL
+            =AJqu
+            -----END PGP MESSAGE-----
+        fp: DC4F25450B498BC31F47AE85D31A0028B61D93D3
+    unencrypted_suffix: _unencrypted
+    version: 3.6.1

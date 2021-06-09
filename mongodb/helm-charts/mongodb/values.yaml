@@ -1,0 +1,23 @@
+mongodb:
+  architecture: replicaset
+
+  auth:
+    enabled: true
+    rootPassword:
+    replicaSetKey:
+
+  directoryPerDB: true
+
+  replicaCount: 2
+
+  resources:
+    requests:
+      cpu: 400m
+      memory: 400Mi
+    limits:
+      cpu: 800m
+      memory: 400Mi
+
+  persistence:
+    enabled: true
+    storageClass: "local-storage"

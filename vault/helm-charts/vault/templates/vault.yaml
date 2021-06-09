@@ -1,0 +1,183 @@
+# Create a namespace for called "tenant" for the Tenant Vault instance,
+# the Central instance will be running in .Release.Namespace = "vault-central"
+
+# This Vault CR describes the setup of the Central Vault instance
+apiVersion: "vault.banzaicloud.com/v1alpha1"
+kind: "Vault"
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
+
+spec:
+  size: {{ .Values.size }}
+  image: vault:1.7.2
+  bankVaultsImage: banzaicloud/bank-vaults:latest
+
+  # Specify the ServiceAccount where the Vault Pod and the Bank-Vaults
+  # configurer/unsealer will be running
+  serviceAccount: "vault"
+
+  # Specify how many nodes you would like to have in your etcd cluster
+  # NOTE: -1 disables automatic etcd provisioning
+  etcdSize: -1
+
+  resources:
+    # A YAML representation of resource ResourceRequirements for vault container
+    # Detail can reference: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container
+    vault:
+      requests:
+        memory: "400Mi"
+        cpu: "100m"
+      limits:
+        memory: "400Mi"
+        cpu: "150m"
+
+  # Persistence done in the same way as for central-vault
+  volumeMounts:
+    - name: tls
+      mountPath: "/tls"
+
+  volumes:
+    - name: "tls"
+      secret:
+        secretName: "{{ .Chart.Name }}-tls"
+
+  # Unsealing will be done via Kubernetes Secrets if not defined otherwise,
+  # not highly secure, but this is just an example, in production, please
+  # use one of the KMS based unseal options.
+  unsealConfig:
+    kubernetes:
+      secretNamespace: {{ .Release.Namespace }}
+
+  # A YAML representation of a final Vault config file, this will be mounted
+  # to the Vault container directly.
+  config:
+    storage:
+      postgresql:
+        ha_enabled: true
+    listener:
+      tcp:
+        address: "0.0.0.0:8200"
+        tls_cert_file: "/tls/server.crt"
+        tls_key_file: "/tls/server.key"
+    api_addr: "https://vault.vault:8200"
+    ui: true
+
+  # This is how the Bank-Vaults configurer should configure Vault to enable the
+  # transit auto-unseal flow for the tenant instance.
+  # The automated version of:
+  # https://learn.hashicorp.com/vault/operations/autounseal-transit#cli-command
+  externalConfig:
+    policies:
+      - name: admin
+        rules: path "auth/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+              path "sys/auth/*" {
+                capabilities = ["create", "update", "delete", "sudo"]
+              }
+              path "sys/auth" {
+                capabilities = ["read"]
+              }
+              path "sys/policies/acl/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+              path "sys/policies/acl" {
+                capabilities = ["list"]
+              }
+              path "secret/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+              path "sys/mounts/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+              path "sys/health" {
+                capabilities = ["read", "sudo"]
+              }
+              path "sys/capabilities" {
+                capabilities = ["create", "update"]
+              }
+              path "sys/capabilities-self" {
+                capabilities = ["create", "update"]
+              }
+      - name: allow_secrets
+        rules: path "secret/*" {
+          capabilities = ["create", "read", "update", "delete", "list"]
+          }
+      - name: allow_read_secrets
+        rules: path "secret/*" {
+          capabilities = ["read", "list"]
+          }
+    # Instead of creating a token by hand we allow the tenant Vault to request
+    # one with the Kubernetes auth method, via vault-env and vault-secrets-webhook
+    auth:
+      - type: kubernetes
+        path: kubernetes/
+        roles:
+          # Allow every the tenant Vault Pod in the tenant namespace to use
+          # this transit engine
+          - name: default
+            bound_service_account_names: "default"
+            bound_service_account_namespaces: "default"
+            policies: allow_tenant_transit
+            ttl: 3m
+          - name: harbor
+            bound_service_account_names: "default,harbor"
+            bound_service_account_namespaces: "harbor"
+            policies: allow_read_secrets
+            ttl: 3m
+          - name: redis
+            bound_service_account_names: "default,redis"
+            bound_service_account_namespaces: "redis"
+            policies: allow_read_secrets
+            ttl: 3m
+          - name: postgresql
+            bound_service_account_names: "default,postgresql"
+            bound_service_account_namespaces: "postgresql"
+            policies: allow_read_secrets
+            ttl: 3m
+          - name: mongodb
+            bound_service_account_names: "default,mongodb"
+            bound_service_account_namespaces: "mongodb"
+            policies: allow_read_secrets
+            ttl: 3m
+          - name: harbor
+            bound_service_account_names: "default,harbor-veriga"
+            bound_service_account_namespaces: "harbor-veriga"
+            policies: allow_read_secrets
+            ttl: 3m
+          - name: wekan
+            bound_service_account_names: "default,wekan"
+            bound_service_account_namespaces: "wekan"
+            policies: allow_read_secrets
+            ttl: 3m
+      - type: userpass
+        path: userpass/
+    secrets:
+      - path: secret
+        type: kv
+        description: General secrets.
+        options:
+          version: 2
+
+  # The VAULT_TOKEN environment variable will be read by Vault to login
+  # for unsealing, the "vault:" special prefix instructs the webhook to
+  # mutate the Pod and pass in  variable directly to the process with
+  # vault-env.
+  vaultEnvsConfig:
+    - name: VAULT_PG_CONNECTION_URL
+      value: {{ .Values.vaultPGConnectionURL }}
+
+
+  # vault-env from the above block needs some information to know how
+  # to login into Vault with the Kubernetes auth method, and where to
+  # find the TLS CA certificate for it. Since the operator was asked
+  # to distribute the CA of central-vault instance to other namespaces
+  # with `caNamespaces:` it will find in the "central-vault-tls" Secrets.
+  # This will be mounted automatically by the webhook into the Pod.
+  #vaultAnnotations:
+  #  vault.security.banzaicloud.io/vault-addr: "https://vault-central.vault-central:8200"
+  #  vault.security.banzaicloud.io/vault-role: "vault"
+  #  vault.security.banzaicloud.io/vault-path: "kubernetes/"
+  #  vault.security.banzaicloud.io/vault-tls-secret: "vault-central-tls"
+  #  vault.security.banzaicloud.io/vault-skip-verify: "false"

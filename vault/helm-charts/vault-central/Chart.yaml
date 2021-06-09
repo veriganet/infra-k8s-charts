@@ -1,0 +1,8 @@
+apiVersion: v2
+name: vault-central
+description: Helm chart for vault-central instance
+version: 0.1.0
+appVersion: 0.1.0
+maintainers:
+  - name: Poort Man's Cloud Infrastructure Co.
+    email: info@pmaci.org

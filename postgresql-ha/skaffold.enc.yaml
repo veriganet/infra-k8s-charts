@@ -1,0 +1,70 @@
+apiVersion: ENC[AES256_GCM,data:l8pEd4qwZrEFzQm4iIVlPw==,iv:h7f3IXXSCXZ4RDvpVkqSVku6m284Of9iSzQHA8ij2ec=,tag:sO9Bqpb6sHjXJPQR3BE7eA==,type:str]
+kind: ENC[AES256_GCM,data:0+wcT5Ts,iv:sZ0dX3ME37YIklOkRfFh/3pZTBzj/HGyx2m3wgFXffs=,tag:C/9szp1FvYHXd+0J5rcSpA==,type:str]
+profiles:
+-   name: ENC[AES256_GCM,data:B57I,iv:V57oAPFZTQFHyvpA7MShofboWLJGC/LuzqmvocX4uEE=,tag:1rqWYlqcrGIl1Ht2sOD4Ug==,type:str]
+    deploy:
+        kubectl:
+            manifests:
+            - ENC[AES256_GCM,data:lFLtQ6P67KW2Ww==,iv:ehxb/gioTN2oYBDqw+XEeK9aXeM2xqrDsRCGhG+hf8M=,tag:i+GcHDgR0eaN+NmahRc6dw==,type:str]
+-   name: ENC[AES256_GCM,data:yA5t,iv:iZzbjkcDOmIIMgG0JzZMMtWYdlra8OHqVpiLC5zoLHY=,tag:FKLmqVU2wUWqbxRf1CCSOw==,type:str]
+    deploy:
+        helm:
+            releases:
+            -   name: ENC[AES256_GCM,data:YkW9ub1zzdkGtWLt9g==,iv:7eVa6qs4W0JK17RU8uAeAt/T+zzzV5lrde4NfKHEQvU=,tag:oyVHeJEobHfPmGpQoYqxNg==,type:str]
+                chartPath: ENC[AES256_GCM,data:dYEV7IgK03G1IYkU8Z6T+D9h1pVu4RdWuWON,iv:80EWvsXtXrYvwLBlvj0ewmPVc/uhYi+ft0HFZ1+Bzm0=,tag:ggqDBklK+QCb3ThC+aR3KQ==,type:str]
+                namespace: ENC[AES256_GCM,data:4p2aPM6YWzn59A==,iv:L14lwFWiEyS0HaSFpytKSIPTBcIkTGjEuanbMUxSOhQ=,tag:mZdjEWEuELIJwUICo1HV6A==,type:str]
+                setValues:
+                    postgresql-ha.postgresql.replicaCount: ENC[AES256_GCM,data:Eg==,iv:gkTU9UaMyPHvvvVOkrWT4Eokn5UjKfby+lDXC8XDbyA=,tag:dzt0YMEGHH0qWuphLM4VyA==,type:int]
+                    postgresql-ha.pgpool.replicaCount: ENC[AES256_GCM,data:1Q==,iv:1gGIrwA5Pacz/FhkmrODL3IVjTQGbwGAeAdHqFKw8OQ=,tag:p9yygnF957azW/TwuGuF6A==,type:int]
+                    postgresql-ha.postgresql.username: ENC[AES256_GCM,data:YOGzNWAC5eU=,iv:lJMo7duyS0ZplwtDEHnxSTPeSVvKojWEBmA9F4QUrkE=,tag:mgQFbuOIBbnewXe2N6gkJQ==,type:str]
+                    postgresql-ha.postgresql.password: ENC[AES256_GCM,data:PosrRy/ujM5yQq917ZCTkqXyR24P2A/A,iv:HksL2aYe03wqzNVzQrPkukfw3G7hqh3FUq/A+/IV2qw=,tag:tmWzU/AHgAlH+2Bafb5wmA==,type:str]
+                    postgresql-ha.postgresql.repmgrUsername: ENC[AES256_GCM,data:cMLN6fStUswLug==,iv:uP5P5v8pXRCmL/fkqXGw5xeRrfbQHs/yzo/y5Z2BEdc=,tag:spUophlUYE9IYujXh2Fbag==,type:str]
+                    postgresql-ha.postgresql.repmgrPassword: ENC[AES256_GCM,data:Tqb15I6cbEAA/7BjU+if1OKJ1wYwwuKF,iv:Pc6Dk1wCgTHVxuzmib/SkaVXpVUcc5oxYlV8lukGRhY=,tag:dqTAOWgvwpPJsJj6cGONrA==,type:str]
+                    postgresql-ha.pgpool.adminUsername: ENC[AES256_GCM,data:AoRT6zs=,iv:xX490HznD/JswsWbOJj/nPorBHVCJikktgkrXk1cbP4=,tag:6z7kQZcfQteDLbglgzq7+g==,type:str]
+                    postgresql-ha.pgpool.adminPassword: ENC[AES256_GCM,data:mEusF2+pkLAMn8L47GnIk9iewRIjgS07,iv:h3HFkNRNEbw+Mgo9/M/luvr/px69DVEZwmX8AurG02g=,tag:isfv2AtAVMSHYMnQh5R9xg==,type:str]
+                    postgresql-ha.pgpool.customUsers.usernames: ENC[AES256_GCM,data:uoEJALjb2oaj0e4AbpFyL7cv,iv:uPuq35/v2HFMQPQtmHzdFDEv9KAbIwjkSgmIYCiPitg=,tag:b8D6shxdabsfp7fPd/dmTw==,type:str]
+                    postgresql-ha.pgpool.customUsers.passwords: ENC[AES256_GCM,data:NxJUwxB/+qMTTaluoiQLcR7HrJCV5YXM2ETPFHtSK4DE8Smvfa0UMx0HxlENVPL7zA==,iv:d30mwua23LAgG7nHsjpyI20nD6WUwen5dssijo73Wgo=,tag:5OFZqOMNS9GeHU1z3AXtPA==,type:str]
+-   name: ENC[AES256_GCM,data:/K2TWA==,iv:n0H+Y6Cu09p/GeX+sMWLSFs+AJ5rUAxnwx9FBxukveY=,tag:bx6Tv3to7GepxSwa2jmarQ==,type:str]
+    deploy:
+        helm:
+            releases:
+            -   name: ENC[AES256_GCM,data:c4FMQucQ+B1fAVTi8w==,iv:uLLGqUorosvU0rKr+Zag1gWkom1CyBAz14lD96zKKT0=,tag:nHDnKvAPxon9hSknBUWV1g==,type:str]
+                chartPath: ENC[AES256_GCM,data:1sAkWTCX59WVrEjm7ULudOIEIIExQqewodf4,iv:H+8ELbAJjkzYN2cOMzQs8qj6dZto7dGq896Pg629a7k=,tag:SYhtGR8iLmCd9u6eLxVTPg==,type:str]
+                namespace: ENC[AES256_GCM,data:fa6VQVL4VtFBXg==,iv:q8Eq5RsMHeHdRdpydfqhTgjwNoKVPzut2/Vf5YEwYBQ=,tag:cvlJ0J0iA8bd04bhv3JH2g==,type:str]
+                setValues:
+                    postgresql-ha.postgresql.username: ENC[AES256_GCM,data:SDzhOGZqPxU=,iv:iR8i10Z2TSqqxipjoSUU6ntPW1LwO6F7DOnM1bK7PHs=,tag:zr45WnO8jgmbVYLEcZ2S3g==,type:str]
+                    postgresql-ha.postgresql.password: ENC[AES256_GCM,data:FHfjK8YycFx6CPf++/p3Unlf/JmkDsyf,iv:UckQMkn8Ur0hH6C11jrOB1DGPPj7zfSpW86rsm/G2mU=,tag:EcP/JAZD214rTmog+j0jVQ==,type:str]
+                    postgresql-ha.postgresql.repmgrUsername: ENC[AES256_GCM,data:F1cTS7Mv1FRujg==,iv:LavlUbqUgAGJxroktxKFEKGg6U5OwWFTk4Xzc0q6xVM=,tag:a4pMycf6/mJNT7axc69GGQ==,type:str]
+                    postgresql-ha.postgresql.repmgrPassword: ENC[AES256_GCM,data:wrLUQYQJI/vSutBrE6M+pTYCdurKdmEV,iv:8/GVEb0Z13wUT1y0liBhwMnApK/aVusFiNY81VBtuIE=,tag:SWOlLUqiFcT6sQu5dU8okA==,type:str]
+                    postgresql-ha.pgpool.adminUsername: ENC[AES256_GCM,data:CuZOj6s=,iv:ZZfc3/Qmo74BpgLXaemIQF5R1TpW36MgPEurlEJkK/A=,tag:jybvU28t5mH5XHV38A/YwQ==,type:str]
+                    postgresql-ha.pgpool.adminPassword: ENC[AES256_GCM,data:Yxwh+jvaV8MUukkHhT18bMXyfhWwzYP/,iv:JP9HskxXQI+ZUJiHpH1Zz1A++BYj8vZ+H09b5c7jng4=,tag:WdCYYp2jWSuz9vPb5xZZrg==,type:str]
+                    postgresql-ha.pgpool.customUsers.usernames: ENC[AES256_GCM,data:1TehLTbQ0kG2KvxVNwdGt63R,iv:6MSiWwQMYbe4YWjGTnGvfllFFwJQSbNaSQylwbzPjKQ=,tag:p4XvqH7lJZKcSQlZ+bOvMQ==,type:str]
+                    postgresql-ha.pgpool.customUsers.passwords: ENC[AES256_GCM,data:NrUliHpF7fMiBVnqjIsQF4hrDFikusBk5QXvcZJfeNMH+RX35LIWg98WyUQF0Ro=,iv:UCKDZFDUt+/r/O8vhNeBcOpTGxuHkmFRKV4SMFsmmWQ=,tag:8NN4B+1A/YjcGw9vqjIyJw==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    lastmodified: '2021-06-09T13:05:12Z'
+    mac: ENC[AES256_GCM,data:SiXfEQM4ZS4KtSxU0uOozAf5kk07+/Vt98Y7e81of/8mN2Dc9gGv5rzhBC64j49CkQiRDPIQYMnsVZW3J8wH8D8xPXyNrQOVgPZMjj1ftla7BN+XHGjWTONW23nPrXwjHhhGk0IQYnRg6cc7XvtCfBSZfKbntfUdQzYodbGm1WM=,iv:HHEs21VNAGB8rtZrnnS0L6NPcgttaJAO+aSF1rw2OSk=,tag:l/zH7CIeZ1r6LZW2tpm9/A==,type:str]
+    pgp:
+    -   created_at: '2021-06-09T13:05:11Z'
+        enc: |
+            -----BEGIN PGP MESSAGE-----
+
+            hQGMA7lPC4r8+hzxAQv+MAuwnecGtUiqs1sANiRce1gJgWVdCtd8+xTrAngWDm5K
+            e5MtP6gMYSIzWfOJOiQL8YGDT99O1SiH3+NoYFJK60Yq7gtpj4NkKd35ga1n6cas
+            CfFq9E1rIe3+oxC2TKxSRrablX1umaysD3wMA4c0ggFlZ/KLeUdmasPMfQMDb6oF
+            RT0BECOhJPekJIH39BQHv/vaUK7oaGfwIMjeaca64J7MBwzh8Qqv3O9HSEMxXjwI
+            sV/FIZeCYiv+byIZuUpuvKfqLSFDDYtBtXB8ltSV+l5i1Vh+8F0eDBXrEXZ2+dci
+            vE4qLxDUJ25d6sx5BB8aXWBbqbvOW6lcLZiWI6GgnInVutWtpXO3O5IP++6j7HW+
+            v9V/C7rzkieTKuFiHSO0XL8I0j6F2rC6utoKe+XWx9UgTknazpSxP1mkDpgQmVoF
+            s6evYmAuhlYS9D3R1czHbIgjJNuyU141ldLkwcEOv5GSgelRqUab49wfVTlDsIi5
+            JE9r07Sa3uCJfddndoGK0lwBFrgRZT829/4mUf34B4ErLAgy3kwIeSXIqDs0Cp1z
+            dcUytkmGgPT6fD+wmfOeJ0S6A+cb7A0+uChIkUFx1PSXUIxgdCb1DxcNudC6Qopa
+            6pzZOFPXQFad3+YRzw==
+            =pSrM
+            -----END PGP MESSAGE-----
+        fp: DC4F25450B498BC31F47AE85D31A0028B61D93D3
+    unencrypted_suffix: _unencrypted
+    version: 3.6.1
