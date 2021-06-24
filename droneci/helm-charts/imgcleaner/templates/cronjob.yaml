@@ -1,0 +1,47 @@
+{{- range $host := .Values.hosts }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}-{{ $host | replace "." ""  }}-clean
+  namespace: {{ $.Release.Namespace }}
+spec:
+  schedule: "{{ $.Values.cron }}"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}-{{ $host | replace "." ""  }}-clean
+        spec:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - {{ $host }}
+{{- with $.Values.tolerations }}
+          tolerations:
+{{ toYaml . | indent 12 }}
+{{- end }}
+          containers:
+            - name: {{ $.Chart.Name }}
+              imagePullPolicy: Always
+              image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+              volumeMounts:
+                - mountPath: /mnt
+                  name: imgvolume
+              command:
+                - /usr/local/bin/imgcleaner.sh
+              args:
+                -  /mnt/
+          restartPolicy: "Never"
+          volumes:
+            - name: imgvolume
+              hostPath:
+                path: {{ $.Values.cleaning_path }}
+                type: Directory
+---
+{{- end }}

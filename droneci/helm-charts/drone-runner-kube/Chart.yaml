@@ -1,0 +1,10 @@
+apiVersion: v2
+name: drone-runner-kube
+description: A Helm chart for drone-ci runner
+version: 0.1.5
+appVersion: 1.0.0
+
+dependencies:
+  - name: drone-runner-kube
+    version: 0.1.5
+    repository: "https://charts.drone.io"
