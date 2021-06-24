@@ -32,3 +32,11 @@ drone-runner-kube:
     DRONE_FEATURE_FLAG_DISABLE_DELETE: "false"
     DRONE_DEBUG: "true"
     DRONE_LOGS_DEBUG: "true"
+  extraVolumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
+      type: Socket
+  extraVolumeMounts:
+  - mountPath: /var/run/docker.sock
+    name: dockersock
