@@ -1,0 +1,38 @@
+# Default values for imgcleaner.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ecr.ad.dice.fm/base
+  tag: imgcleaner-latest
+  pullPolicy: IfNotPresent
+
+cleaning_path: /var/lib/drone-img-cache/
+
+hosts:
+  - 'worker0cluster0dc.ad.dice.fm'
+  - 'worker1cluster0dc.ad.dice.fm'
+  - 'worker2cluster0dc.ad.dice.fm'
+  - 'drone0cluster0dc.ad.dice.fm'
+  - 'drone1cluster0dc.ad.dice.fm'
+
+tolerations:
+  - key: "droneciexec"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+
+# ┌───────────── minute (0 - 59)
+# │ ┌───────────── hour (0 - 23)
+# │ │ ┌───────────── day of the month (1 - 31)
+# │ │ │ ┌───────────── month (1 - 12)
+# │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
+# │ │ │ │ │                                   7 is also Sunday on some systems)
+# │ │ │ │ │
+# │ │ │ │ │
+# * * * * *
+
+cron: "0 2 * * *"

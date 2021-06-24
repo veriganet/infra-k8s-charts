@@ -1,0 +1,40 @@
+apiVersion: skaffold/v2beta8
+kind: Config
+profiles:
+  - name: pre
+    deploy:
+      kubectl:
+        manifests:
+          - ./pre.yaml
+  - name: prod
+    deploy:
+      helm:
+        releases:
+          - name: drone
+            chartPath: ./helm-charts/drone
+            valuesFiles:
+              - ./helm-charts/drone/values.yaml
+            namespace: droneci
+  - name: runner
+    deploy:
+      helm:
+        releases:                    
+          - name: drone-runner-kube
+            chartPath: ./helm-charts/drone-runner-kube
+            valuesFiles:
+              - ./helm-charts/drone-runner-kube/values.yaml
+            namespace: droneci
+  - name: post
+    deploy:
+      helm:
+        releases:
+          - name: drone-imgcleaner
+            chartPath: ./helm-charts/imgcleaner
+            valuesFiles:
+              - ./helm-charts/imgcleaner/values.yaml
+            namespace: droneci-exec
+          - name: drone-restarter
+            chartPath: ./helm-charts/drone-restarter
+            valuesFiles:
+              - ./helm-charts/drone-restarter/values.yaml
+            namespace: droneci

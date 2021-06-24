@@ -1,0 +1,6 @@
+dependencies:
+- name: drone-runner-kube
+  repository: https://charts.drone.io
+  version: 0.1.5
+digest: sha256:3870ce9e2e072afb0d44a1d5c2e8b7a9840128afe406eb4f12033464ca0ffcd3
+generated: "2021-06-11T08:40:21.823209922-04:00"

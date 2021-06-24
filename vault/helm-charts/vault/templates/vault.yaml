@@ -121,6 +121,11 @@ spec:
             bound_service_account_namespaces: "default"
             policies: allow_tenant_transit
             ttl: 3m
+          - name: droneci
+            bound_service_account_names: "default,droneci,drone-runner-kube"
+            bound_service_account_namespaces: "droneci,droneci-exec,drone-runner-kube"
+            policies: allow_read_secrets
+            ttl: 3m
           - name: harbor
             bound_service_account_names: "default,harbor"
             bound_service_account_namespaces: "harbor"

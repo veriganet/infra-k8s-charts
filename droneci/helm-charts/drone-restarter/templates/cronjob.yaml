@@ -1,0 +1,86 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  schedule: "{{ $.Values.cron }}"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}
+          annotations:
+            vault.security.banzaicloud.io/vault-addr: "https://vault.bootstrap:8200"
+            vault.security.banzaicloud.io/vault-role: "drone-ci"
+            vault.security.banzaicloud.io/vault-skip-verify: "true"
+          labels:
+            job: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}
+        spec:
+          serviceAccountName: drone-ci
+          automountServiceAccountToken: true
+{{- with $.Values.tolerations }}
+          tolerations:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with $.Values.affinity }}
+          affinity:
+{{ toYaml . | indent 12 }}
+{{- end }}
+          containers:
+            - name: {{ $.Chart.Name }}
+              imagePullPolicy: Always
+              image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+              command:
+                - /usr/local/bin/drone-restarter.sh
+              env:
+                - name: DRONE_SERVER
+                  value: "https://drone-ci.dice.fm"
+                - name: DRONE_TOKEN
+                  value: "vault:secret/data/drone-token#key"
+          restartPolicy: "Never"
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}-imageidfix
+  namespace: {{ $.Release.Namespace }}
+spec:
+  schedule: "{{ $.Values.cron }}"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}-imageidfix
+          annotations:
+            vault.security.banzaicloud.io/vault-addr: "https://vault.bootstrap:8200"
+            vault.security.banzaicloud.io/vault-role: "drone-ci"
+            vault.security.banzaicloud.io/vault-skip-verify: "true"
+          labels:
+            job: {{ default $.Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}-imageidfix
+        spec:
+          serviceAccountName: drone-ci
+          automountServiceAccountToken: true
+{{- with $.Values.tolerations }}
+          tolerations:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with $.Values.affinity }}
+          affinity:
+{{ toYaml . | indent 12 }}
+{{- end }}
+          containers:
+            - name: {{ $.Chart.Name }}-imageidfix
+              imagePullPolicy: Always
+              image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+              command:
+                - /usr/local/bin/drone-restarter-imagereplacer.sh
+              env:
+                - name: DRONE_SERVER
+                  value: "https://drone-ci.dice.fm"
+                - name: DRONE_TOKEN
+                  value: "vault:secret/data/drone-token#key"
+          restartPolicy: "Never"
+---
