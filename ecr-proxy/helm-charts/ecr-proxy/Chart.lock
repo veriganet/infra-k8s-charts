@@ -1,0 +1,6 @@
+dependencies:
+- name: ecr-proxy
+  repository: https://evryfs.github.io/helm-charts/
+  version: 0.2.5
+digest: sha256:51a6660c8ba16c12c781177a8930fe6ed48731e4c79df62c0706a38f4f57c6e7
+generated: "2021-06-24T15:52:04.772220009-04:00"

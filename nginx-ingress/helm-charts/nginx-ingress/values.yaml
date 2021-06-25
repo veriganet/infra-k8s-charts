@@ -4,14 +4,15 @@ ingress-nginx:
     replicaCount: 2
     resources:
       limits:
-        cpu: "100m"
-        memory: "128Mi"
+        cpu: "150m"
+        memory: "400Mi"
       requests:
-        cpu: "70m"
-        memory: "128Mi"
+        cpu: "100m"
+        memory: "250Mi"
     metrics:
       enabled: true
     service:
+      enabled: true
       targetPorts:
         http: 80
         https: 443

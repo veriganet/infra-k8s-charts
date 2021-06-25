@@ -156,6 +156,11 @@ spec:
             bound_service_account_namespaces: "wekan"
             policies: allow_read_secrets
             ttl: 3m
+          - name: ecr-proxy
+            bound_service_account_names: "default,ecr-proxy"
+            bound_service_account_namespaces: "ecr-proxy"
+            policies: allow_read_secrets
+            ttl: 3m
       - type: userpass
         path: userpass/
     secrets:
