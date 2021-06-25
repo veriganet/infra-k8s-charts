@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+profiles:
+  - name: pre
+    deploy:
+      kubectl:
+        manifests:
+          - ./pre.yaml
+  - name: stg
+    deploy:
+      helm:
+        releases:
+          - name: ecr-proxy
+            chartPath: ./helm-charts/ecr-proxy
+            namespace: ecr-proxy
+  - name: prod
+    deploy:
+      helm:
+        releases:
+          - name: ecr-proxy
+            chartPath: ./helm-charts/ecr-proxy
+            namespace: ecr-proxy

@@ -1,0 +1,38 @@
+ecr-proxy:
+  replicaCount: 2
+
+  podAnnotations:
+    vault.security.banzaicloud.io/vault-addr: "https://vault.vault:8200"
+    vault.security.banzaicloud.io/vault-role: "ecr-proxy"
+    vault.security.banzaicloud.io/vault-skip-verify: "true"
+
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/auth-type: basic
+      nginx.ingress.kubernetes.io/auth-secret: ecr
+      nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+      nginx.org/redirect-to-https: "true"
+    hosts:
+      - host: registry-aws.veriga.net
+        paths:
+          - /
+  env:
+    - name: UPSTREAM
+      value: "https://776553443280.dkr.ecr.eu-west-1.amazonaws.com"
+    - name: AWS_REGION
+      value: "eu-west-1"
+    - name: AWS_ACCESS_KEY_ID
+      value: "vault:secret/data/aws/ecr-proxy#aws_access_key_id"
+    - name: AWS_SECRET_ACCESS_KEY
+      value: "vault:secret/data/aws/ecr-proxy#aws_secret_access_key"
+    - name: RESOLVER
+      value: "coredns.kube-system.svc"
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+

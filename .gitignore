@@ -10,3 +10,4 @@ mongodb/skaffold.yaml
 wekan/skaffold.yaml
 wg-api+3-key.pem
 wg-api+3.pem
+ecr-proxy/auth.yaml
