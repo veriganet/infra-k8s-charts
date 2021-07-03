@@ -13,11 +13,11 @@ drone-runner-kube:
     vault.security.banzaicloud.io/vault-skip-verify: "true"
   resources:
     limits:
-      cpu: 400m
-      memory: 400Mi
+      cpu: 1000m
+      memory: 1000Mi
     requests:
-      cpu: 250m
-      memory: 256Mi
+      cpu: 750m
+      memory: 512Mi
   rbac:
     buildNamespaces:
       - droneci
@@ -32,6 +32,8 @@ drone-runner-kube:
     DRONE_FEATURE_FLAG_DISABLE_DELETE: "false"
     DRONE_DEBUG: "true"
     DRONE_LOGS_DEBUG: "true"
+    DRONE_USER_FILTER: "veriganet"
+    DRONE_USER_CREATE: "username:kelepirci,admin:true"
   extraVolumes:
   - name: dockersock
     hostPath:
