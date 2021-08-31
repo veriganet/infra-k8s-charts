@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2beta21
+kind: Config
+profiles:
+  - name: pre
+    deploy:
+      kubectl:
+        manifests:
+          - ./pre.yaml
+  - name: prod
+    deploy:
+      helm:
+        releases:
+          - name: nfs-client-provisioner0
+            chartPath: ./helm-charts/nfs-client-provisioner0
+            namespace: nfs-client-provisioner
+          - name: nfs-client-provisioner1
+            chartPath: ./helm-charts/nfs-client-provisioner1
+            namespace: nfs-client-provisioner

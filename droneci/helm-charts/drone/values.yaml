@@ -10,6 +10,7 @@ drone:
     enabled: true
     annotations:
       kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
     hosts:
       - host: droneci.veriga.net
         paths:
