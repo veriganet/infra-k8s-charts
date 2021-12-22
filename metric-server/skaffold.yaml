@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+profiles:
+  - name: pre
+    deploy:
+      kubectl:
+        manifests:
+          - ./pre.yaml
+  - name: stg
+    deploy:
+      helm:
+        releases:
+          - name: metric-server
+            chartPath: ./helm-charts/metric-server
+            valuesFiles:
+              - ./helm-charts/metric-server/values.yaml
+            namespace: metric-server

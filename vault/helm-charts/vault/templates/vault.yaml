@@ -161,6 +161,11 @@ spec:
             bound_service_account_namespaces: "ecr-proxy"
             policies: allow_read_secrets
             ttl: 3m
+          - name: nano-node
+            bound_service_account_names: "default,nano-node"
+            bound_service_account_namespaces: "*"
+            policies: allow_read_secrets
+            ttl: 3m
       - type: userpass
         path: userpass/
     secrets:
