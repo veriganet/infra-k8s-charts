@@ -40,6 +40,8 @@ spec:
               value: "{{ .Values.rootURL }}"
             - name: MONGO_URL
               value: "{{ .Values.mongoURL }}"
+            - name: MONGO_OPLOG_URL
+              value: "{{ .Values.mongoOplogURL }}"
             - name: MAIL_FROM
               value: {{ .Values.mailFrom | quote }}
             - name: MAIL_URL

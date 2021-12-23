@@ -2,10 +2,10 @@ apiVersion: v2
 name: drone
 description: A Helm chart for drone-ci server
 version: 0.1.7
-appVersion: 1.9.0
+appVersion: 2.0.1
 kubeVersion: "^1.13.0-0"
 
 dependencies:
   - name: drone
     version: 0.1.7
-    repository: "@droneci"
+    repository: "https://charts.drone.io"

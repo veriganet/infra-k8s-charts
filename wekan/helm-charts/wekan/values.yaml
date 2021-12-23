@@ -19,14 +19,14 @@ serviceAccounts:
 ## Wekan image configuration
 ##
 image:
-  repository: quay.io/wekan/wekan
-  tag: latest
+  repository: wekanteam/wekan
+  tag: v5.88
   pullPolicy: IfNotPresent
 
 ## Configuration for wekan component
 ##
 
-replicaCount: 2
+replicaCount: 1
 
 rootURL:
 
@@ -78,11 +78,11 @@ route:
 
 resources:
   requests:
-    memory: 128Mi
-    cpu: 300m
+    memory: 768Mi
+    cpu: 200m
   limits:
-    memory: 1Gi
-    cpu: 500m
+    memory: 768Mi
+    cpu: 200m
 
 ## Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -115,6 +115,7 @@ autoscaling:
 # MongoDB:
 # ------------------------------------------------------------------------------
 mongoURL: "vault:secret/data/wekan#mongodb_url"
+mongoOplogURL: "vault:secret/data/wekan#mongodb_oplog_url"
 
 mongodb-replicaset:
   enabled: false

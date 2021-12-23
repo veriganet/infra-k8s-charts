@@ -13,11 +13,11 @@ drone-runner-kube:
     vault.security.banzaicloud.io/vault-skip-verify: "true"
   resources:
     limits:
-      cpu: 1000m
-      memory: 1000Mi
+      cpu: 250m
+      memory: 256Mi
     requests:
-      cpu: 750m
-      memory: 512Mi
+      cpu: 250m
+      memory: 256Mi
   rbac:
     buildNamespaces:
       - droneci

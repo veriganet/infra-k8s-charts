@@ -17,11 +17,11 @@ drone:
           - "/"
   resources:
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 200m
+      memory: 256Mi
     requests:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 200m
+      memory: 256Mi
   env:
     DRONE_LOGS_TRACE: "true"
     DRONE_SERVER_HOST: "droneci.veriga.net"
