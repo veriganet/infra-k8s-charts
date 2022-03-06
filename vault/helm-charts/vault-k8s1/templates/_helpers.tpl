@@ -1,6 +1,6 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "vaultCentral.name" -}}
+{{- define "vault.name" -}}
 {{- default .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

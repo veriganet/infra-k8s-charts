@@ -6,7 +6,7 @@ profiles:
       kubectl:
         manifests:
           - ./pre.yaml
-  - name: prod
+  - name: k8s0
     deploy:
       helm:
         releases:
@@ -15,6 +15,16 @@ profiles:
             valuesFiles:
               - ./helm-charts/drone/values.yaml
             namespace: droneci
+  - name: k8s1
+    deploy:
+      helm:
+        releases:
+          - name: drone
+            chartPath: ./helm-charts/drone
+            valuesFiles:
+              - ./helm-charts/drone/values-k8s1.yaml
+            namespace: droneci
+
   - name: runner
     deploy:
       helm:
@@ -37,4 +47,13 @@ profiles:
             chartPath: ./helm-charts/drone-restarter
             valuesFiles:
               - ./helm-charts/drone-restarter/values.yaml
+            namespace: droneci
+  - name: vault
+    deploy:
+      helm:
+        releases:
+          - name: drone-vault-secret
+            chartPath: ./helm-charts/drone-vault-secret
+            valuesFiles:
+              - ./helm-charts/drone-vault-secret/values.yaml
             namespace: droneci

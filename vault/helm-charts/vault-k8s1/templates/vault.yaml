@@ -1,0 +1,227 @@
+apiVersion: "vault.banzaicloud.com/v1alpha1"
+kind: "Vault"
+metadata:
+  name: "vault"
+  namespace: "vault"
+  labels:
+    app.kubernetes.io/name: vault
+    vault_cr: vault
+spec:
+  size: {{ .Values.size }}
+  image: vault:1.9.3
+
+  vaultConfigurerPodSpec:
+    imagePullSecrets:
+      - name: registry
+
+  vaultPodSpec:
+    imagePullSecrets:
+      - name: registry
+  # Support for affinity Rules
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #       - matchExpressions:
+  #         - key : "node-role.kubernetes.io/your_role"
+  #           operator: In
+  #           values: ["true"]
+
+  # Support for pod nodeSelector rules to control which nodes can be chosen to run
+  # the given pods
+  # nodeSelector:
+  #   "node-role.kubernetes.io/your_role": "true"
+
+  # Support for node tolerations that work together with node taints to control
+  # the pods that can like on a node
+  # tolerations:
+  # - effect: NoSchedule
+  #   key: node-role.kubernetes.io/your_role
+  #   operator: Equal
+  #   value: "true"
+
+  # Specify the ServiceAccount where the Vault Pod and the Bank-Vaults configurer/unsealer is running
+  serviceAccount: vault
+
+  # Specify the Service's type where the Vault Service is exposed
+  # Please note that some Ingress controllers like https://github.com/kubernetes/ingress-gce
+  # forces you to expose your Service on a NodePort
+  serviceType: ClusterIP
+
+  # Request an Ingress controller with the default configuration
+  ingress:
+    # Specify Ingress object annotations here, if TLS is enabled (which is by default)
+    # the operator will add NGINX, Traefik and HAProxy Ingress compatible annotations
+    # to support TLS backends
+    annotations: {}
+    # Override the default Ingress specification here
+    # This follows the same format as the standard Kubernetes Ingress
+    # See: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.13/#ingressspec-v1beta1-extensions
+    spec: {}
+
+
+  # Support for distributing the generated CA certificate Secret to other namespaces.
+  # Define a list of namespaces or use ["*"] for all namespaces.
+  caNamespaces:
+    - "*"
+
+  # Describe where you would like to store the Vault unseal keys and root token.
+  unsealConfig:
+    options:
+      # The preFlightChecks flag enables unseal and root token storage tests
+      # This is true by default
+      preFlightChecks: true
+      # The storeRootToken flag enables storing of root token in chosen storage
+      # This is true by default
+      storeRootToken: true
+    kubernetes:
+      secretNamespace: vault
+
+  # A YAML representation of a final vault config file.
+  # See https://www.vaultproject.io/docs/configuration/ for more information.
+  config:
+    storage:
+      postgresql:
+        connection_url: "{{ .Values.vaultPGConnectionURL }}"
+        ha_enabled: "true"
+    listener:
+      tcp:
+        address: "0.0.0.0:8200"
+        tls_cert_file: /vault/tls/server.crt
+        tls_key_file: /vault/tls/server.key
+    api_addr: https://vault.vault:8200
+    cluster_addr: "https://${.Env.POD_NAME}:8201"
+    ui: true
+
+  statsdDisabled: true
+
+  serviceRegistrationEnabled: true
+
+  resources:
+    # A YAML representation of resource ResourceRequirements for vault container
+    # Detail can reference: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container
+    vault:
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+
+  # See: https://banzaicloud.com/docs/bank-vaults/cli-tool/#example-external-vault-configuration
+  # The repository also contains a lot examples in the deploy/ and operator/deploy directories.
+  # This is how the Bank-Vaults configurer should configure Vault to enable the
+  # transit auto-unseal flow for the tenant instance.
+  # The automated version of:
+  # https://learn.hashicorp.com/vault/operations/autounseal-transit#cli-command
+  externalConfig:
+    policies:
+      - name: admin
+        rules: |
+          # Allow managing leases
+          path "sys/leases/*"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # Manage auth methods broadly across Vault
+          path "auth/*"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # Create, update, and delete auth methods
+          path "sys/auth/*"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # List auth methods
+          path "sys/auth"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # Create policies
+          path "sys/policy"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/policy/*"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # List existing policies
+          path "sys/policies/acl"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # Create and manage ACL policies
+          path "sys/policies/acl/*"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # List, create, update, and delete key/value secrets
+          path "secret/*"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # Manage secret engines
+          path "sys/mounts/*"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # List existing secret engines.
+          path "sys/mounts"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          # Read health checks
+          path "sys/health"
+          {
+            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+      - name: allow_secrets
+        rules: path "secret/*" {
+          capabilities = ["create", "read", "update", "delete", "list"]
+          }
+      - name: allow_read_secrets
+        rules: path "secret/*" {
+          capabilities = ["read", "list"]
+          }
+    # Instead of creating a token by hand we allow the tenant Vault to request
+    # one with the Kubernetes auth method, via vault-env and vault-secrets-webhook
+    auth:
+      - type: kubernetes
+        path: kubernetes/
+        roles:
+          # Allow every the tenant Vault Pod in the tenant namespace to use
+          # this transit engine
+          - name: default
+            bound_service_account_names: "default"
+            bound_service_account_namespaces: "default"
+            policies: allow_tenant_transit
+            ttl: 3m
+          - name: droneci
+            bound_service_account_names: "default,droneci,drone-runner-kube"
+            bound_service_account_namespaces: "droneci,droneci-exec,drone-runner-kube"
+            policies: allow_read_secrets
+            ttl: 3m
+          - name: redis
+            bound_service_account_names: "default,redis"
+            bound_service_account_namespaces: "redis"
+            policies: allow_read_secrets
+            ttl: 3m
+          - name: wekan
+            bound_service_account_names: "default,wekan"
+            bound_service_account_namespaces: "wekan"
+            policies: allow_read_secrets
+            ttl: 3m
+      - type: userpass
+        path: userpass/
+    secrets:
+      - path: secret
+        type: kv
+        description: General secrets.
+        options:
+          version: 2
+
+  vaultEnvsConfig:
+    - name: VAULT_LOG_LEVEL
+      value: debug

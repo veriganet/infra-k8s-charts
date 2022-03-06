@@ -13,5 +13,5 @@ vault-secrets-webhook:
         operator: NotIn
         values:
           - kube-system
-          - vault-central
           - vswh
+          - vault

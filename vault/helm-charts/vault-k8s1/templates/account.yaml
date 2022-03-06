@@ -1,9 +1,8 @@
 ---
-# This Vault CR describes the setup of the Tenant Vault instance
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: {{ .Chart.Name }}
+  name: vault
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": "pre-install"
@@ -12,47 +11,46 @@ metadata:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ .Chart.Name }}-secrets
+  name: vault
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": "pre-install"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
-    verbs:
-      - "*"
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "update", "patch"]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ .Chart.Name }}-secrets
+  name: vault
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": "pre-install"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 roleRef:
   kind: Role
-  name: {{ .Chart.Name }}-secrets
+  name: vault
   apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
-    name: {{ .Chart.Name }}
-    namespace: {{ .Release.Namespace }}
+    name: vault
 ---
 # This binding allows the deployed Vault instance to authenticate clients
 # through Kubernetes ServiceAccounts (if configured so).
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Chart.Name }}-auth-delegator
+  name: vault-auth-delegator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: system:auth-delegator
 subjects:
   - kind: ServiceAccount
-    name: {{ .Chart.Name }}
+    name: vault
     namespace: {{ .Release.Namespace }}

@@ -20,7 +20,7 @@ serviceAccounts:
 ##
 image:
   repository: wekanteam/wekan
-  tag: v5.88
+  tag: v6.11
   pullPolicy: IfNotPresent
 
 ## Configuration for wekan component
@@ -43,7 +43,7 @@ env:
     value: ""
 
 mailFrom:
-mailURL:
+mailURL: "vault:secret/data/wekan#mail_url"
 
 service:
   type: NodePort

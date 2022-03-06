@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      annotations:
+        {{- if .Values.podAnnotations }}
+          {{ toYaml .Values.podAnnotations | nindent 10 }}
+        {{- end }}
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: vault-secret
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DRONE_DEBUG
+              value: "{{ .Values.drone.debug }}"
+            - name: DRONE_SECRET
+              value: "69f910992bc5ff07dbbdd02db36667e6"
+            - name: VAULT_ADDR
+              value: "https://vault.vault:8200"
+            - name: VAULT_CAPATH
+              value: "/tls/ca.crt"
+            - name: VAULT_SKIP_VERIFY
+              value: "true"
+          volumeMounts:
+            - mountPath: /tls
+              name: vault-tls
+              readOnly: true
+      volumes:
+        - name: vault-tls
+          secret:
+            secretName: vault-tls
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

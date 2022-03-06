@@ -32,6 +32,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           terminationMessagePolicy: FallbackToLogsOnError
+          volumeMounts:
+            - mountPath: "/tls"
+              name: mongodbca
+              readOnly: true
           ports:
             - name: http
               containerPort: 8080
@@ -71,3 +75,7 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
+      volumes:
+        - name: mongodbca
+          secret:
+            secretName: mongodbca

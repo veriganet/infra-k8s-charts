@@ -1,6 +1,0 @@
-cost-analyzer:
-  kubecostToken:
-  persistentVolume:
-    enabled: true
-    size: 10Gi
-
