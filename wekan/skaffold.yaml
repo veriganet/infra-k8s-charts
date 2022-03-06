@@ -1,0 +1,32 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+profiles:
+  - name: pre
+    deploy:
+      kubectl:
+        manifests:
+          - ./pre.yaml
+  - name: k8s0
+    deploy:
+      helm:
+        releases:
+          - name: wekan
+            chartPath: ./helm-charts/wekan
+            namespace: wekan
+            setValues:
+              rootURL: https://tasks.veriga.net
+              endpoint: tasks.veriga.net
+              ingress.hosts.0: tasks.veriga.net
+              mailFrom: "Tasks <tasks@veriga.net>"
+  - name: k8s1
+    deploy:
+      helm:
+        releases:
+          - name: wekan
+            chartPath: ./helm-charts/wekan
+            namespace: wekan
+            setValues:
+              rootURL: https://tasks.veriga.net
+              endpoint: tasks.veriga.net
+              ingress.hosts.0: tasks.veriga.net
+              mailFrom: "Tasks <tasks@veriga.net>"

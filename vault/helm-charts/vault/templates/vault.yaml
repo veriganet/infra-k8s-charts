@@ -10,7 +10,7 @@ metadata:
 
 spec:
   size: {{ .Values.size }}
-  image: vault:1.7.2
+  image: vault:1.9.3
   bankVaultsImage: banzaicloud/bank-vaults:latest
 
   # Specify the ServiceAccount where the Vault Pod and the Bank-Vaults
@@ -71,35 +71,35 @@ spec:
     policies:
       - name: admin
         rules: path "auth/*" {
-                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-              }
-              path "sys/auth/*" {
-                capabilities = ["create", "update", "delete", "sudo"]
-              }
-              path "sys/auth" {
-                capabilities = ["read"]
-              }
-              path "sys/policies/acl/*" {
-                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-              }
-              path "sys/policies/acl" {
-                capabilities = ["list"]
-              }
-              path "secret/*" {
-                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-              }
-              path "sys/mounts/*" {
-                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-              }
-              path "sys/health" {
-                capabilities = ["read", "sudo"]
-              }
-              path "sys/capabilities" {
-                capabilities = ["create", "update"]
-              }
-              path "sys/capabilities-self" {
-                capabilities = ["create", "update"]
-              }
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/auth/*" {
+          capabilities = ["create", "update", "delete", "sudo"]
+          }
+          path "sys/auth" {
+          capabilities = ["read"]
+          }
+          path "sys/policies/acl/*" {
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/policies/acl" {
+          capabilities = ["list"]
+          }
+          path "secret/*" {
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/mounts/*" {
+          capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+          }
+          path "sys/health" {
+          capabilities = ["read", "sudo"]
+          }
+          path "sys/capabilities" {
+          capabilities = ["create", "update"]
+          }
+          path "sys/capabilities-self" {
+          capabilities = ["create", "update"]
+          }
       - name: allow_secrets
         rules: path "secret/*" {
           capabilities = ["create", "read", "update", "delete", "list"]
@@ -121,49 +121,19 @@ spec:
             bound_service_account_namespaces: "default"
             policies: allow_tenant_transit
             ttl: 3m
+          - name: vault
+            bound_service_account_names: "vault"
+            bound_service_account_namespaces: "vault"
+            policies: allow_tenant_transit
+            ttl: 3m
           - name: droneci
             bound_service_account_names: "default,droneci,drone-runner-kube"
             bound_service_account_namespaces: "droneci,droneci-exec,drone-runner-kube"
             policies: allow_read_secrets
             ttl: 3m
-          - name: harbor
-            bound_service_account_names: "default,harbor"
-            bound_service_account_namespaces: "harbor"
-            policies: allow_read_secrets
-            ttl: 3m
-          - name: redis
-            bound_service_account_names: "default,redis"
-            bound_service_account_namespaces: "redis"
-            policies: allow_read_secrets
-            ttl: 3m
-          - name: postgresql
-            bound_service_account_names: "default,postgresql"
-            bound_service_account_namespaces: "postgresql"
-            policies: allow_read_secrets
-            ttl: 3m
-          - name: mongodb
-            bound_service_account_names: "default,mongodb"
-            bound_service_account_namespaces: "mongodb"
-            policies: allow_read_secrets
-            ttl: 3m
-          - name: harbor
-            bound_service_account_names: "default,harbor-veriga"
-            bound_service_account_namespaces: "harbor-veriga"
-            policies: allow_read_secrets
-            ttl: 3m
           - name: wekan
             bound_service_account_names: "default,wekan"
             bound_service_account_namespaces: "wekan"
-            policies: allow_read_secrets
-            ttl: 3m
-          - name: ecr-proxy
-            bound_service_account_names: "default,ecr-proxy"
-            bound_service_account_namespaces: "ecr-proxy"
-            policies: allow_read_secrets
-            ttl: 3m
-          - name: nano-node
-            bound_service_account_names: "default,nano-node"
-            bound_service_account_namespaces: "*"
             policies: allow_read_secrets
             ttl: 3m
       - type: userpass

@@ -1,0 +1,46 @@
+image:
+  repository: drone/vault
+  tag: "latest"
+
+imagePullPolicy: "Always"
+
+imagePullSecrets:
+  - name: "registry"
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+
+podAnnotations:
+  vault.security.banzaicloud.io/vault-addr: "https://vault.vault:8200"
+  vault.security.banzaicloud.io/vault-role: "droneci"
+  vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
+  vault.security.banzaicloud.io/vault-skip-verify: "false"
+
+replicas: 2
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+rbac:
+  buildNamespaces:
+    - droneci
+
+serviceAccountName: "default"
+
+drone:
+  debug: "true"
+
+nodeSelector: {}
+
+affinity: {}
+
+tolerations: {}

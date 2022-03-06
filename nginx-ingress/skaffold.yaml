@@ -1,7 +1,7 @@
 apiVersion: skaffold/v2beta10
 kind: Config
 profiles:
-  - name: stg
+  - name: k8s0
     deploy:
       helm:
         releases:
@@ -10,10 +10,19 @@ profiles:
             namespace: ingress
             setValues:
               nginx-ingress.controller.replicaCount: 1
-  - name: prod
+  - name: k8s1
     deploy:
       helm:
         releases:
           - name: nginx-ingress
-            chartPath: ./helm-charts/nginx-ingress
+            chartPath: ./helm-charts/nginx-ingress-do
             namespace: ingress
+            setValues:
+              nginx-ingress.controller.admissionWebhooks.enabled: "true"
+              nginx-ingress.controller.replicaCount: 2
+              nginx-ingress.controller.service.externalTrafficPolicy: Local
+              nginx-ingress.controller.use-proxy-protocol: "true"
+              nginx-ingress.controller.service.annotations."service\.beta\.kubernetes\.io/do-loadbalancer-enable-proxy-protocol": "true"
+              nginx-ingress.controller.service.annotations."service\.beta\.kubernetes\.io/do-loadbalancer-size-slug": "lb-small"
+              nginx-ingress.controller.service.annotations."service\.beta\.kubernetes\.io/do-loadbalancer-name": "k8s1"
+

@@ -23,7 +23,7 @@ drone-runner-kube:
       - droneci
   env:
     DRONE_LOGS_TRACE: "true"
-    DRONE_RPC_HOST: "droneci.veriga.net"
+    DRONE_RPC_HOST: "vault:secret/data/droneci/#rpc_host"
     DRONE_RPC_PROTO: "https"
     DRONE_RPC_SECRET: "vault:secret/data/droneci/#rpc_secret"
     DRONE_NAMESPACE_DEFAULT: "droneci"
@@ -34,6 +34,8 @@ drone-runner-kube:
     DRONE_LOGS_DEBUG: "true"
     DRONE_USER_FILTER: "veriganet"
     DRONE_USER_CREATE: "username:kelepirci,admin:true"
+    DRONE_SECRET_PLUGIN_ENDPOINT: "http://drone-vault-secret:3000"
+    DRONE_SECRET_PLUGIN_TOKEN: "vault:secret/data/droneci/#drone_secret"
   extraVolumes:
   - name: dockersock
     hostPath:

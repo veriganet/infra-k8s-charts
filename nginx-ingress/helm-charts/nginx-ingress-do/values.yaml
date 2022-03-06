@@ -1,0 +1,29 @@
+ingress-nginx:
+  controller:
+    name: controller
+    replicaCount: 2
+    resources:
+      limits:
+        cpu: "250m"
+        memory: "500Mi"
+      requests:
+        cpu: "150m"
+        memory: "250Mi"
+    admissionWebhooks:
+      enabled: true
+    metrics:
+      enabled: true
+    service:
+      enabled: true
+      type: LoadBalancer
+      externalTrafficPolicy: Local
+      use-proxy-protocol: "true"
+      annotations:
+        service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+        service.beta.kubernetes.io/do-loadbalancer-size-slug: "lb-small"
+    stats:
+      enabled: true
+  defaultBackend:
+    enabled: true
+  rbac:
+    create: true
