@@ -1,7 +1,7 @@
 drone:
   podAnnotations:
     vault.security.banzaicloud.io/vault-addr: "https://vault.vault:8200"
-    vault.security.banzaicloud.io/vault-role: "default"
+    vault.security.banzaicloud.io/vault-role: "droneci"
     vault.security.banzaicloud.io/vault-skip-verify: "true"
   automountServiceAccountToken: true
   image:
@@ -12,7 +12,7 @@ drone:
       kubernetes.io/ingress.class: nginx
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
     hosts:
-      - host: droneci1.veriga.net
+      - host: droneci.veriga.net
         paths:
           - "/"
   resources:
@@ -24,13 +24,13 @@ drone:
       memory: 256Mi
   env:
     DRONE_LOGS_TRACE: "true"
-    DRONE_SERVER_HOST: "droneci1.veriga.net"
+    DRONE_SERVER_HOST: "droneci.veriga.net"
     DRONE_SERVER_PROTO: "https"
-    DRONE_RPC_SECRET: "vault:secret/data/droneci/#rpc_secret"
-    DRONE_GITHUB_CLIENT_ID: "vault:secret/data/droneci/#github_client_id"
-    DRONE_GITHUB_CLIENT_SECRET: "vault:secret/data/droneci/#github_client_secret"
+    DRONE_RPC_SECRET: "vault:secret/data/droneci0/#rpc_secret"
+    DRONE_GITHUB_CLIENT_ID: "vault:secret/data/droneci0/#github_client_id"
+    DRONE_GITHUB_CLIENT_SECRET: "vault:secret/data/droneci0/#github_client_secret"
     DRONE_DATABASE_DRIVER: "postgres"
-    DRONE_DATABASE_DATASOURCE: "vault:secret/data/droneci/#database_datasource"
+    DRONE_DATABASE_DATASOURCE: "vault:secret/data/droneci0/#database_datasource"
     DRONE_USER_CREATE: "username:kelepirci,admin:true"
   persistentVolume:
     enabled: false

@@ -39,8 +39,8 @@ credentials:
 ## Specify additional environmental variables for the Deployment
 ##
 env:
-  - name: ""
-    value: ""
+  - name: BIGEVENTS_PATTERN
+    value: "received|start|due|end"
 
 mailFrom:
 mailURL: "vault:secret/data/wekan#mail_url"
