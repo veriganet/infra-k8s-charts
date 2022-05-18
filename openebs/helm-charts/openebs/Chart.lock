@@ -1,0 +1,6 @@
+dependencies:
+- name: openebs
+  repository: https://openebs.github.io/charts
+  version: 3.1.0
+digest: sha256:998d4252b56047bda4a64c0cd677f61afa32628ff52621f297dd40db13dd9524
+generated: "2022-03-25T11:07:36.722239704-04:00"
