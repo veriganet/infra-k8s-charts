@@ -1,0 +1,5 @@
+openebs:
+  localprovisioner:
+    enabled: true
+    enableDeviceClass: false
+    enableHostpathClass: true

@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+profiles:
+  - name: pre
+    deploy:
+      kubectl:
+        manifests:
+          - ./pre.yaml
+  - name: k8s1
+    deploy:
+      helm:
+        releases:
+          - name: openebs
+            chartPath: ./helm-charts/openebs
+            valuesFiles:
+              - ./helm-charts/openebs/values.yaml
+            namespace: openebs
