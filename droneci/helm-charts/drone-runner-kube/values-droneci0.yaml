@@ -1,0 +1,44 @@
+drone-runner-kube:
+  image:
+    repository: drone/drone-runner-kube
+    tag: "latest"
+  podSecurityContext:
+    fsGroup: 2000
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+  podAnnotations:
+    vault.security.banzaicloud.io/vault-addr: "https://vault.vault:8200"
+    vault.security.banzaicloud.io/vault-role: "droneci"
+    vault.security.banzaicloud.io/vault-skip-verify: "true"
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  rbac:
+    buildNamespaces:
+      - droneci0
+  env:
+    DRONE_LOGS_TRACE: "true"
+    DRONE_RPC_HOST: "vault:secret/data/droneci0/#rpc_host"
+    DRONE_RPC_PROTO: "http"
+    DRONE_RPC_SECRET: "vault:secret/data/droneci0/#rpc_secret"
+    DRONE_NAMESPACE_DEFAULT: "droneci0"
+    DRONE_FEATURE_FLAG_RETRY_LOGS: "true"
+    DRONE_FEATURE_FLAG_DELAYED_DELETE: "true"
+    DRONE_FEATURE_FLAG_DISABLE_DELETE: "false"
+    DRONE_DEBUG: "true"
+    DRONE_LOGS_DEBUG: "true"
+    DRONE_USER_FILTER: "veriganet"
+    DRONE_USER_CREATE: "username:kelepirci,admin:true"
+  extraVolumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
+      type: Socket
+  extraVolumeMounts:
+  - mountPath: /var/run/docker.sock
+    name: dockersock
