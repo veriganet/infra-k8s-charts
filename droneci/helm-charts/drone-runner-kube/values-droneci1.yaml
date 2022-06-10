@@ -1,7 +1,7 @@
 drone-runner-kube:
   image:
     repository: drone/drone-runner-kube
-    tag: "latest"
+    tag: "1.0.0-rc.2"
   podSecurityContext:
     fsGroup: 2000
   securityContext:
@@ -34,8 +34,6 @@ drone-runner-kube:
     DRONE_LOGS_DEBUG: "true"
     DRONE_USER_FILTER: "veriganet"
     DRONE_USER_CREATE: "username:kelepirci,admin:true"
-    DRONE_SECRET_PLUGIN_ENDPOINT: "http://drone-vault-secret:3000"
-    DRONE_SECRET_PLUGIN_TOKEN: "vault:secret/data/droneci/#drone_secret"
   extraVolumes:
   - name: dockersock
     hostPath:

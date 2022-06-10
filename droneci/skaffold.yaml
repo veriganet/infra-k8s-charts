@@ -6,34 +6,47 @@ profiles:
       kubectl:
         manifests:
           - ./pre.yaml
-  - name: k8s0
+
+  - name: droneci0
     deploy:
       helm:
         releases:
           - name: drone
             chartPath: ./helm-charts/drone
             valuesFiles:
-              - ./helm-charts/drone/values.yaml
-            namespace: droneci
-  - name: k8s1
+              - ./helm-charts/drone/values-droneci0.yaml
+            namespace: droneci0
+
+  - name: droneci1
     deploy:
       helm:
         releases:
           - name: drone
             chartPath: ./helm-charts/drone
             valuesFiles:
-              - ./helm-charts/drone/values-k8s1.yaml
+              - ./helm-charts/drone/values-droneci1.yaml
             namespace: droneci
 
-  - name: runner
+  - name: runner0
     deploy:
       helm:
         releases:                    
+          - name: drone-runner-kube0
+            chartPath: ./helm-charts/drone-runner-kube
+            valuesFiles:
+              - ./helm-charts/drone-runner-kube/values-droneci0.yaml
+            namespace: droneci0
+
+  - name: runner1
+    deploy:
+      helm:
+        releases:
           - name: drone-runner-kube
             chartPath: ./helm-charts/drone-runner-kube
             valuesFiles:
-              - ./helm-charts/drone-runner-kube/values.yaml
+              - ./helm-charts/drone-runner-kube/values-droneci1.yaml
             namespace: droneci
+
   - name: post
     deploy:
       helm:
@@ -48,6 +61,7 @@ profiles:
             valuesFiles:
               - ./helm-charts/drone-restarter/values.yaml
             namespace: droneci
+
   - name: vault
     deploy:
       helm:
