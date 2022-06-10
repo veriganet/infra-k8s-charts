@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+profiles:
+  - name: pre
+    deploy:
+      kubectl:
+        manifests:
+          - ./pre.yaml
+  - name: k8s1
+    deploy:
+      helm:
+        releases:
+          - name: kubernetes-replicator
+            chartPath: ./helm-charts/kubernetes-replicator
+            valuesFiles:
+              - ./helm-charts/kubernetes-replicator/values.yaml
+            namespace: kubernetes-replicator
+  - name: post
+    deploy:
+      kubectl:
+        manifests:
+          - ./post.yaml
