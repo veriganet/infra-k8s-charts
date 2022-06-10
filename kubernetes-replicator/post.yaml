@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry
+  namespace: kubernetes-replicator
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "*"
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: eyJhdXRocyI6IHsiaHR0cHM6Ly9pbmRleC5kb2NrZXIuaW8vdjEvIjogeyJhdXRoIjogImRtVnlhV2RoYm1WME9qTXhNakV6TVRFMkxURmlabUV0TkdOa1lTMWhPV0V4TFRBeE1qbGpOekUzTmpCa013PT0ifX19Cg==
