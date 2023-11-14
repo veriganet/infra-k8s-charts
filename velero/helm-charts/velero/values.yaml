@@ -35,8 +35,8 @@ velero:
     secretContents:
       cloud: |
         [default]
-        aws_access_key_id=ZDEUE3BSE62LTECEWIZM
-        aws_secret_access_key=947aWtA36pCwUBt9I06GS9lMI4JeK2W/Msw5GmKJpQw
+        aws_access_key_id=REVOKED
+        aws_secret_access_key=REVOKED
   deployRestic: true
   restic:
     resources:
